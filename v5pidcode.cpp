@@ -43,14 +43,14 @@ bumper BumperC = bumper(Brain.ThreeWirePort.C);
 using namespace vex;
 
 int main() {
-  const float kP = 4.8; // Proportional gain - original was 5.2
-  const float kI = 0.01; // Integral gain changed from .01 to .02
-  const float kD = 0.5; // Derivative gain - 0.6 moves more violently with increased speed of 30
+  const float kP = 3.0; // Proportional gain - original is 5.2
+  const float kI = 0.1; // Integral gain changed from .01 to .02
+  const float kD = 0.6; // Derivative gain - 0.6 moves more violently with increased speed of 30
   float integral = 0;
   float lastError = 0;
   float error, derivative, power;
   int leftSensor, rightSensor;
-  int startSpeed = 15; // intial speed was 15
+  int startSpeed = 35; // intial speed was 15
   int divisor = 20;
 
   // Main control loop
