@@ -41,16 +41,43 @@ bumper BumperC = bumper(Brain.ThreeWirePort.C);
   
 // Allows for easier use of the VEX Library
 using namespace vex;
+float error, derivative, power;
+float integral = 0;
+float maxIntegral = 0;
 
+/*
+void telemetry(){
+      Brain.Screen.clearScreen();
+    Brain.Screen.setCursor(1, 1);
+
+    Brain.Screen.print(power);
+    Brain.Screen.newLine();
+    // value 1
+    Brain.Screen.print("proportional: ");
+    Brain.Screen.print(error);
+    Brain.Screen.newLine();
+    // value 2
+    Brain.Screen.print("integral: ");
+    Brain.Screen.print(integral);
+    Brain.Screen.newLine();
+    // value 3
+    Brain.Screen.print("derivative: ");
+    Brain.Screen.print(derivative);
+    Brain.Screen.newLine();
+    Brain.Screen.print("maxIntegral:  ");
+    Brain.Screen.print(maxIntegral);
+    Brain.Screen.newLine();
+}
+
+*/
 int main() {
-  const float kP = 3.0; // Proportional gain - original is 5.2
-  const float kI = 0.1; // Integral gain changed from .01 to .02
-  const float kD = 0.6; // Derivative gain - 0.6 moves more violently with increased speed of 30
-  float integral = 0;
+  const float kP = 5.2; // Proportional gain - original is 5.2
+  const float kI = 0.01; // Integral gain changed from .01 to .02
+  const float kD = 0.5; // Derivative gain - 0.6 moves more violently with increased speed of 30
   float lastError = 0;
-  float error, derivative, power;
+
   int leftSensor, rightSensor;
-  int startSpeed = 35; // intial speed was 15
+  int startSpeed = 15; // intial speed was 15
   int divisor = 20;
 
   // Main control loop
@@ -65,15 +92,20 @@ int main() {
     derivative = error - lastError;
     lastError = error;
 
+    if(integral > maxIntegral){
+      maxIntegral = integral;
+    }
+
     power = (kP * error) + (kI * integral) + (kD * derivative);
     leftMotor.setVelocity(startSpeed + power/divisor, percent);
     rightMotor.setVelocity(startSpeed - power/divisor, percent);
     leftMotor.spin(forward);
     rightMotor.spin(forward);
-    Brain.Screen.clearScreen();
-    Brain.Screen.setCursor(1, 1);
 
-    Brain.Screen.print(power);
+   // telemetry();
+
+
+    wait(0.1, seconds);
 
     if (BumperC.pressing()) {
       Brain.Screen.print("Button Pressed");
@@ -81,9 +113,9 @@ int main() {
       rightMotor.stop();
       wait(0.1, seconds);
 
-      leftMotor.spinFor(forward, 600.0, degrees, false);
-      rightMotor.spinFor(forward, -600.0, degrees);
-
+      leftMotor.spinFor(forward, 650.0, degrees, false);
+      rightMotor.spinFor(forward, -650.0, degrees);
+/*
       leftSensor = leftSen.objectDistance(mm);
       rightSensor = rightSen.objectDistance(mm);
       
@@ -99,8 +131,9 @@ int main() {
       leftMotor.spin(forward);
       rightMotor.spin(forward);
 
-    }
+    }*/
 
     wait(0.02,seconds);
   }
-}
+}}
+
